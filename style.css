@@ -36,21 +36,23 @@ header h1 a{
 /*========================
   NAVIGATION
 =========================*/
-#top-nav-left, #top-nav-right{
-  width: 35%;
-  float: left;
-  height: 80px;
-}
 nav a{
   text-decoration: none;
   padding: 10px 10px;
   margin: 0 10px;
 }
-#top-nav-left ul, #top-nav-right ul{
+nav ul{
   list-style: none;
-  line-height: 80px;
   margin: 0;
   padding: 0;
+}
+#top-nav-left, #top-nav-right{
+  width: 35%;
+  float: left;
+  height: 80px;
+}
+#top-nav-left ul, #top-nav-right ul{
+  line-height: 80px;
 }
 #top-nav-left ul{
   float: left;
@@ -61,6 +63,16 @@ nav a{
 #top-nav-left ul li, #top-nav-right ul li{
   float: left;
   line-height: 80px;
+}
+#sidebar-nav ul li{
+  text-align: center;
+  margin-bottom: 20px;
+}
+#sidebar-nav ul li:first-child{
+  margin-bottom: 30px;
+}
+#sidebar-nav ul li:first-child a{
+  color: red;
 }
 
 /*========================
@@ -79,6 +91,7 @@ footer{
 .site-width{
   margin: 0 auto;
   width: 90%;
+  overflow: hidden;
 }
 #contents{
   margin-bottom: 30px;
@@ -86,7 +99,32 @@ footer{
 #main{
   width: 100%;
 }
+#main.with-sidebar{
+  width: 70%;
+  float: right;
+}
 
+/*========================
+  SIDEBAR
+=========================*/
+#sidebar{
+  width: 30%;
+  float: left;
+}
+#sidebar h3{
+  text-align: center;
+  margin: 30px auto;
+}
+#sidebar .prof-img{
+  width: 100%;
+  text-align: center;
+}
+#sidebar .prof-img img{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 150px;
+}
 
 /*========================
   BOTANN
@@ -132,6 +170,13 @@ input[type="checkbox"]{
 .form-container{
   margin: 0 auto;
   width: 40%;
+}
+.with-sidebar .form-container{
+  margin: 150px auto;
+  width: 60%;
+}
+.form{
+  overflow: hidden;
 }
 .form .checkbox_msg{
   display: inline-block;
