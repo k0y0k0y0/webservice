@@ -17,6 +17,7 @@ if(!empty($_SESSION['login_date'])){
     $_SESSION['login_date'] = time();
 
     //現在ページがlogin.phpの場合はmypage.phpへ遷移
+    //現在のファイル名を取得する箇所
     if(basename($_SERVER['PHP_SELF']) === 'login.php'){
       debug('マイページへ遷移します。');
       header('Location:mypage.php');
