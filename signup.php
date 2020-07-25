@@ -11,7 +11,73 @@ debugLogStart();
 
 //post送信されていたら以下の処理を行う
 if(!empty($_POST)){
+  //POSTの中身を変数に代入
+  $email = $_POST['email'];
+  $pass = $_POST['pass'];
+  $pass_re = $_POST['pass_re'];
 
+  //Validation Check
+  //1.未入力
+  validRequired($eamil, 'email');
+  validRequired($pass, 'pass');
+  validRequired($pass_re, 'pass_er');
+
+  //Next Step or Not
+  if(empty($err_msg)){
+    //2.email
+    validEmail($eamil, 'email');
+    validMaxLen($eamil, 'email');
+    validEmailDup($email);
+
+    //Next Step or Not
+    if(empty($err_msg)){
+      //3.password
+      validHalf($pass, 'pass');
+      validMaxLen($pass, 'pass');
+      validMinLen($pass, 'pass');
+
+      //Next Step or Not
+      if(empty($err_msg)){
+        //4.password re
+        validMatch($pass, $pass_re, 'pass_re');
+
+        if(empty($err_msg)){
+          try{
+            //Data Base Connection
+            $dbh = dbConnect();
+            //Create SQL
+            $sql = 'INSERT INTO user (name, email, password, login_time, create_date)
+                    VALUES (:name, :email, :pass, :login_time, :create_date)';
+            $data = array(':name' => $name,
+                          ':email' => $email,
+                          ':pass' => password_hash($pass, PASSWORD_DEFAULT),
+                          ':login_time' => date('Y-m-d H:i:s'),
+                          ':create_date' => date('Y-m-d H:i:s'));
+            //Query
+            $stmt = queryPost($dbh, $sql, $data);
+            //クエリ成功の場合
+            if($stmt){
+              //ログイン有効期限(default=1[h])
+              $seeLimit = 60*60;
+              //最終ログインを現在日時に
+              $_SESSION['login_data'] = time();
+              $_SESSION['login_limit'] = $seeLimit;
+              //ユーザーIDを格納
+              $_SESSION['user_id'] = $dbh->lastInsertId();
+
+              debug('セッション変数の中身: '.print_r($_SESSION, true));
+
+              //Go to mypage
+              header('Location:mypage.php');
+            }
+          }catch(Exception $e){
+            error_log('エラー発生: '.$e->getMessage());
+            $err_msg['common'] = MSG07;
+          }
+        }
+      }
+    }
+  }
 }
 ?>
 <?php
@@ -26,7 +92,7 @@ require('./head.php');
   ?>
 
   <!-- コンテンツ -->
-  <div id="contents">
+  <div id="contents" class="site-width">
 
     <!-- メイン -->
     <section id="main">
@@ -68,8 +134,8 @@ require('./head.php');
               if(!empty($err_msg['pass_re'])) echo $err_msg['pass_re'];
             ?>
           </div>
-          <div>
-            <input type="submit" value="SIGNUP">
+          <div class="btn-container">
+            <input type="submit" class="btn btn-mid" value="SIGNUP">
           </div>
         </form>
       </div>
