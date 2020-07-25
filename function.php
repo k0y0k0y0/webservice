@@ -44,4 +44,40 @@ function debugLogStart(){
     debug('Login Limit Time Stamp: '.($_SESSION['login_date'] + $_SESSION['login_limit']));
 }
 
+//=====================
+// Data Base
+//=====================
+//DataBaseConnection
+function dbConnect(){
+  //DBへの接続準備
+  $dsn = 'mysql:dbname=freemarket;host=localhost;charset=utf8';
+  $user = 'root';
+  $password = 'root';
+  $options = array(
+    // SQL実行失敗時にはエラーコードのみ設定
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
+    // デフォルトフェッチモードを連想配列形式に設定
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバー負荷を軽減)
+    // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
+    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+  );
+  // PDOオブジェクト生成（DBへ接続）
+  $dbh = new PDO($dsn, $user, $password, $options);
+  return $dbh;
+}
+function queryPost($dbh, $sql, $data){
+  //Create Query
+  $stmt =$dbh->prepare($sql);
+  //Do SQL
+  //ダメだったらMSG作成
+  if(!$stmt->execute($data)){
+    debug('クエリに失敗しました。(＞＜)');
+    debug('失敗したsql: '.print_r($stmt, true));
+    $err_msg['common'] = MSG07;
+    return 0;
+  }
+  debug('クエリ成功。');
+  return $stmt;
+}
 ?>
