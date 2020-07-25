@@ -2,42 +2,42 @@
 //=====================
 //　FUNCTIONS OF VALIDATION
 //=====================
-//バリデーション関数（未入力チェック）
+//未入力チェック
 function validRequired($str, $key){
   if($str === ''){ //金額フォームなどを考えると数値の０はOKにし、空文字はダメにする
     global $err_msg;
     $err_msg[$key] = MSG01;
   }
 }
-//バリデーション関数（Email形式チェック）
+//Email形式チェック
 function validEmail($str, $key){
   if(!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", $str)){
     global $err_msg;
     $err_msg[$key] = MSG02;
   }
 }
-//バリデーション関数（同値チェック）
+//同値チェック
 function validMatch($str1, $str2, $key){
   if($str1 !== $str2){
     global $err_msg;
     $err_msg[$key] = MSG03;
   }
 }
-//バリデーション関数（最小文字数チェック）
+//最小文字数チェック
 function validMinLen($str, $key, $min = 6){
   if(mb_strlen($str) < $min){
     global $err_msg;
     $err_msg[$key] = MSG05;
   }
 }
-//バリデーション関数（最大文字数チェック）
+//最大文字数チェック
 function validMaxLen($str, $key, $max = 256){
   if(mb_strlen($str) > $max){
     global $err_msg;
     $err_msg[$key] = MSG06;
   }
 }
-//バリデーション関数（半角チェック）
+//半角チェック
 function validHalf($str, $key){
   if(!preg_match("/^[a-zA-Z0-9]+$/", $str)){
     global $err_msg;
@@ -51,6 +51,23 @@ function validTel($str, $key){
     $err_msg[$key] = MSG10;
   }
 }
-
-
+//Email重複Check
+function validEmailDup($email){
+  global $err_msg;
+  try{
+    $dbh = dbConnect();
+    $sql = 'SELECT count(*)
+            FROM users
+            WHERE email = :email
+            AND delete_flg = 0';
+    $data = array(':email' => $email);
+    $stmt = queryPost($dbh, $sql, $data);
+    //クエリ結果の値を取得
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if(!empty(array_shift($result))) $err_msg['email'] = MSG08;
+  }catch(Exception $e){
+    error_log('エラー発生:' . $e->getMessage());
+    $err_msg['common'] = MSG07;
+  }
+}
 ?>
