@@ -50,7 +50,7 @@ function debugLogStart(){
 //DataBaseConnection
 function dbConnect(){
   //DBへの接続準備
-  $dsn = 'mysql:dbname=freemarket;host=localhost;charset=utf8';
+  $dsn = 'mysql:dbname=phototo;host=localhost;charset=utf8';
   $user = 'root';
   $password = 'root';
   $options = array(
