@@ -29,6 +29,8 @@ if(!empty($_POST)){
   if(empty($err_msg)){
     //2.name
     validMaxLen($name, 'name');
+
+    //Next Step or Not
     if(empty($err_msg)){
       //3.email
       validEmail($email, 'email');
@@ -52,7 +54,7 @@ if(!empty($_POST)){
               //Data Base Connection
               $dbh = dbConnect();
               //Create SQL
-              $sql = 'INSERT INTO user (username, email, password, login_time, create_date)
+              $sql = 'INSERT INTO users (username, email, password, login_time, create_date)
                       VALUES (:name, :email, :pass, :login_time, :create_date)';
               $data = array(':name' => $name,
                             ':email' => $email,
@@ -107,40 +109,41 @@ require('./head.php');
         <form action="" method="post" class="form">
           <label class="<?php if(!empty($err_msg['name'])) echo 'err'; ?>">
             NAME
-            <input type="text" name="name">
+            <span class="form_msg">
+              <?php
+                if(!empty($err_msg['name'])) echo $err_msg['name'];
+              ?>
+            </span>
+            <input type="text" name="name" value="<?php if(!empty($_POST['name'])) echo$_POST['name']; ?>">
           </label>
-          <div class="form_msg">
-            <?php
-              if(!empty($err_msg['name'])) echo $err_msg['name'];
-            ?>
-          </div>
           <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
             EMAIL
-            <input type="text" name="email">
+            <span class="form_msg">
+              <?php
+                if(!empty($err_msg['email'])) echo $err_msg['email'];
+              ?>
+            </span>
+            <input type="text" name="email" value="<?php if(!empty($_POST['email'])) echo$_POST['email']; ?>">
           </label>
-          <div class="form_msg">
-            <?php
-              if(!empty($err_msg['email'])) echo $err_msg['email'];
-            ?>
-          </div>
           <label class="<?php if(!empty($err_msg['pass'])) echo 'err'; ?>">
-            PASSWORD <span>※英数字６文字以上</span>
-            <input type="password" name="pass">
+            PASSWORD
+            <span style="font-size:12px">※英数字６文字以上</span>
+            <span class="form_msg">
+              <?php
+                if(!empty($err_msg['pass'])) echo $err_msg['pass'];
+              ?>
+            </span>
+            <input type="password" name="pass" value="<?php if(!empty($_POST['pass'])) echo$_POST['pass']; ?>">
           </label>
-          <div class="form_msg">
-            <?php
-              if(!empty($err_msg['pass'])) echo $err_msg['pass'];
-            ?>
-          </div>
           <label class="<?php if(!empty($err_msg['pass_re'])) echo 'err'; ?>">
             PASSWORD:RE
-            <input type="password" name="pass_re">
+            <span class="form_msg">
+              <?php
+                if(!empty($err_msg['pass_re'])) echo $err_msg['pass_re'];
+              ?>
+            </span>
+            <input type="password" name="pass_re" value="<?php if(!empty($_POST['pass_re'])) echo$_POST['pass_re']; ?>">
           </label>
-          <div class="form_msg">
-            <?php
-              if(!empty($err_msg['pass_re'])) echo $err_msg['pass_re'];
-            ?>
-          </div>
           <div class="btn-container">
             <input type="submit" class="btn btn-mid" value="SIGNUP">
           </div>
