@@ -12,6 +12,7 @@ debugLogStart();
 
 //post送信されていたら以下の処理を行う
 if(!empty($_POST)){
+  debug('POST送信があります。');
   //POSTの中身を変数に代入
   $name = $_POST['name'];
   $email = $_POST['email'];
@@ -54,7 +55,7 @@ if(!empty($_POST)){
               //Data Base Connection
               $dbh = dbConnect();
               //Create SQL
-              $sql = 'INSERT INTO users (username, email, password, login_time, create_date)
+              $sql = 'INSERT INTO users (user_name, email, password, login_time, create_date)
                       VALUES (:name, :email, :pass, :login_time, :create_date)';
               $data = array(':name' => $name,
                             ':email' => $email,
@@ -68,7 +69,7 @@ if(!empty($_POST)){
                 //ログイン有効期限(default=1[h])
                 $seeLimit = 60*60;
                 //最終ログインを現在日時に
-                $_SESSION['login_data'] = time();
+                $_SESSION['login_date'] = time();
                 $_SESSION['login_limit'] = $seeLimit;
                 //ユーザーIDを格納
                 $_SESSION['user_id'] = $dbh->lastInsertId();
