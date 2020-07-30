@@ -17,7 +17,7 @@ if(!empty($_SESSION['login_date'])){
     $_SESSION['login_date'] = time();
 
     //現在ページがlogin.phpの場合はmypage.phpへ遷移
-    if(basename($_SESSION['PHP_SELF']) === 'login.php'){
+    if(basename($_SERVER['PHP_SELF']) === 'login.php'){
       debug('マイページへ遷移します。');
       header('Location:mypage.php');
     }
@@ -25,6 +25,6 @@ if(!empty($_SESSION['login_date'])){
 }else{
   debug('未ログインユーザーです。');
   //現在ページがlogin.phpでない場合はlogin.phpへ遷移
-  if(basename($_SESSION['PHP_SELF']) !== 'login.php') header('Location:login.php');
+  if(basename($_SERVER['PHP_SELF']) !== 'login.php') header('Location:login.php');
 }
 ?>

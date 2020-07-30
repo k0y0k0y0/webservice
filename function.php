@@ -66,9 +66,10 @@ function dbConnect(){
   $dbh = new PDO($dsn, $user, $password, $options);
   return $dbh;
 }
+
 function queryPost($dbh, $sql, $data){
   //Create Query
-  $stmt =$dbh->prepare($sql);
+  $stmt = $dbh->prepare($sql);
   //Do SQL
   //ダメだったらMSG作成
   if(!$stmt->execute($data)){
