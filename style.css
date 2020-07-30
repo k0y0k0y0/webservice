@@ -39,8 +39,29 @@ header h1 a{
 #top-nav-left, #top-nav-right{
   width: 35%;
   float: left;
+  height: 80px;
 }
-
+nav a{
+  text-decoration: none;
+  padding: 10px 10px;
+  margin: 0 10px;
+}
+#top-nav-left ul, #top-nav-right ul{
+  list-style: none;
+  line-height: 80px;
+  margin: 0;
+  padding: 0;
+}
+#top-nav-left ul{
+  float: left;
+}
+#top-nav-right ul{
+  float: right;
+}
+#top-nav-left ul li, #top-nav-right ul li{
+  float: left;
+  line-height: 80px;
+}
 
 /*========================
   FOOTER
@@ -92,10 +113,29 @@ input[type='text'], input[type='password']{
   margin-bottom: 30px;
   box-sizing: border-box;
   font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 1px;
+}
+input[type="submit"] {
+  font-size: 14px;
+}
+input[type="submit"]:hover {
+  cursor: pointer;
+}
+input[type="checkbox"]{
+  width: 18px;
+  height: 18px;
+  margin: 3px;
+  vertical-align: middle;
 }
 .form-container{
   margin: 0 auto;
   width: 40%;
+}
+.form .checkbox_msg{
+  display: inline-block;
+  font-size: 14px;
 }
 .form .btn{
   float: right;
@@ -103,9 +143,12 @@ input[type='text'], input[type='password']{
 .form .btn-container {
   overflow: hidden;
 }
-input[type="submit"] {
-  font-size: 14px;
+.form .err{
+  color: red;
 }
-input[type="submit"]:hover {
-  cursor: pointer;
+.form .err input[type='text'], .form .err input[type='password']{
+  border-color: red;
+}
+.form_msg{
+  color: red;
 }
