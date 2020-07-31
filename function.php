@@ -81,4 +81,21 @@ function queryPost($dbh, $sql, $data){
   debug('クエリ成功。');
   return $stmt;
 }
+
+function getUser($u_id){
+  debug('ユーザー情報を取得します。');
+  try{
+    //DataBase Connection
+    $dbh = dbConnect();
+    //Create SQL
+    $sql = 'SELECT * FROM users WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array('u_id' => $u_id);
+    //Query
+    $stmt = queryPost($dbh, $sql, $data);
+    if($stmt) return $stmt->fetch(PDO::FETCH_ASSOC);
+    else return false;
+  }catch(Exception $e){
+    error_log('エラー発生: '.$e->getMessage());
+  }
+}
 ?>
