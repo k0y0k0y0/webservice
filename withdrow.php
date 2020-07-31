@@ -8,7 +8,17 @@ require('./head.php');
   <?php
   require('./header.php');
   ?>
-    
+
+  <!-- コンテンツ -->
+  <div id="contents" class="site-width">
+
+    <!-- サイドバー -->
+    <?php
+    require('./sideBar.php');
+    ?>
+
+  </div>
+
   <!-- フッター -->
   <?php
   require('./footer.php');
