@@ -33,6 +33,19 @@
       </li>
       <li>
         <?php
+        if(basename($_SERVER['PHP_SELF']) === 'profImgEdit.php'){
+        ?>
+          PROFILE IMAGE EDIT
+        <?php
+        }else{
+        ?>
+          <a href="./profImgEdit.php">PROFILE IMAGE EDIT</a>
+        <?php
+        }
+        ?>
+      </li>
+      <li>
+        <?php
         if(basename($_SERVER['PHP_SELF']) === 'passEdit.php'){
         ?>
           PASSWORD EDIT
