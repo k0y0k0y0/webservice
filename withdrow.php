@@ -15,8 +15,6 @@ require('auth.php');
 $dbFromData = getUser($_SESSION['user_id']);
 debug('取得したユーザー情報: '.print_r($dbFromData, true));
 
-$userName = $dbFromData['user_name'];
-
 //post送信されていたら以下の処理を行う
 if(!empty($_POST)){
   debug('POST送信があります。');
@@ -60,20 +58,21 @@ require('./head.php');
 
     <!-- サイドバー -->
     <?php
+    $userName = $dbFromData['user_name'];
     require('./sideBar.php');
     ?>
-
+<!-- チェックがなくても退会できてしまうのでその部分の処理を忘れずに行うこと！ -->
     <!-- メイン -->
     <section id="main" class="with-sidebar">
       <div class="form-container">
         <form action="" method="post" class="form">
           本当に退会しますか？
           <label>
-            <input type="checkbox" name="withdrow">
+            <input type="checkbox" name="withdrow[]">
             <span class="checkbox_msg">退会する</span>
           </label>
           <div class="btn-container">
-            <input type="submit" class="btn btn-mid" value="WITHDROW" name="withdrow">
+            <input type="submit" class="btn btn-mid" value="WITHDROW">
           </div>
         </form>
       </div>

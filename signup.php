@@ -14,14 +14,14 @@ debugLogStart();
 if(!empty($_POST)){
   debug('POST送信があります。');
   //POSTの中身を変数に代入
-  $name = $_POST['name'];
+  $user_name = $_POST['user_name'];
   $email = $_POST['email'];
   $pass = $_POST['pass'];
   $pass_re = $_POST['pass_re'];
 
   //Validation Check
   //1.未入力
-  validRequired($name, 'name');
+  validRequired($user_name, 'user_name');
   validRequired($email, 'email');
   validRequired($pass, 'pass');
   validRequired($pass_re, 'pass_re');
@@ -29,7 +29,7 @@ if(!empty($_POST)){
   //Next Step or Not
   if(empty($err_msg)){
     //2.name
-    validMaxLen($name, 'name');
+    validMaxLen($user_name, 'user_name');
 
     //Next Step or Not
     if(empty($err_msg)){
@@ -57,7 +57,7 @@ if(!empty($_POST)){
               //Create SQL
               $sql = 'INSERT INTO users (user_name, email, password, login_time, create_date)
                       VALUES (:name, :email, :pass, :login_time, :create_date)';
-              $data = array(':name' => $name,
+              $data = array(':name' => $user_name,
                             ':email' => $email,
                             ':pass' => password_hash($pass, PASSWORD_DEFAULT),
                             ':login_time' => date('Y-m-d H:i:s'),
@@ -108,14 +108,14 @@ require('./head.php');
     <section id="main">
       <div class="form-container">
         <form action="" method="post" class="form">
-          <label class="<?php if(!empty($err_msg['name'])) echo 'err'; ?>">
+          <label class="<?php if(!empty($err_msg['user_name'])) echo 'err'; ?>">
             NAME
             <span class="form_msg">
               <?php
-                if(!empty($err_msg['name'])) echo $err_msg['name'];
+                if(!empty($err_msg['user_name'])) echo $err_msg['user_name'];
               ?>
             </span>
-            <input type="text" name="name" value="<?php if(!empty($_POST['name'])) echo$_POST['name']; ?>">
+            <input type="text" name="user_name" value="<?php if(!empty($_POST['user_name'])) echo$_POST['user_name']; ?>">
           </label>
           <label class="<?php if(!empty($err_msg['email'])) echo 'err'; ?>">
             EMAIL
