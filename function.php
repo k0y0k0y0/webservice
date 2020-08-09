@@ -98,4 +98,31 @@ function getUser($u_id){
     error_log('エラー発生: '.$e->getMessage());
   }
 }
+
+//フォーム入力保持
+function getFormData($str, $flg = false){
+  if($flg)$method = $_GET;
+  else $method = $_POST;
+  global $dbFromData;
+  //ユーザーデータがあるかないか
+  if(!empty($dbFromData)){
+    //フォームにエラーがあるかないか
+    if(!empty($err_msg[$str])){
+      //POSTにデータがあるかないか
+      if(isset($method[$str])) return sanitize($method[$str]);
+      else return sanitize($dbFromData[$str]);
+    }else{
+      if(isset($method[$str]) && $method[$str] !== $dbFromData[$str]) return sanitize($method[$str]);
+      else return sanitize($dbFromData[$str]);
+    }
+  }else{
+    if(isset($method[$str])) return sanitize($method[$str]);
+  }
+}
+
+
+// サニタイズ
+function sanitize($str){
+  return htmlspecialchars($str,ENT_QUOTES);
+}
 ?>
