@@ -14,6 +14,7 @@ require('./head.php');
 
     <!-- サイドバー -->
     <?php
+    $userName = $dbFromData['user_name'];
     require('./sideBar.php');
     ?>
 

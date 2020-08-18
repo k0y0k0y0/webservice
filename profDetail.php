@@ -1,3 +1,4 @@
+<!-- 考える箇所があるので注意 -->
 <?php
 $siteTitle = 'LOGIN';
 require('./head.php');
@@ -14,6 +15,7 @@ require('./head.php');
 
     <!-- サイドバー -->
     <?php
+    $userName = $dbFromData['user_name'];
     require('./sideBar.php');
     ?>
 
