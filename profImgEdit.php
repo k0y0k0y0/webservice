@@ -2,6 +2,8 @@
 
 //共通変数・関数ファイルを読込み
 require('function.php');
+require('./errorMesages.php');
+require('./validations.php');
 
 debug('「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「「');
 debug('「　PROFIMGEDIT.PHP　');
@@ -12,7 +14,9 @@ debugLogStart();
 require('auth.php');
 
 //GET USER DATA FROM DATABASE
+$user_id = (!empty($_GET['user_id']))? $_GET['user_id']: '';
 $dbFromData = getUser($_SESSION['user_id']);
+$edit_flg = (empty($user_id)) ? false : true;
 debug('取得したユーザー情報: '.print_r($dbFromData, true));
 
 //POST送信があった場合
@@ -80,12 +84,19 @@ require('./head.php');
     <!-- メイン -->
     <section id="main" class="with-sidebar">
       <div class="form-container">
-        <form action="" >
-          <label class="<?php if(!empty($err_msg['pic'])) echo 'err'; ?>">
+        <form action="" method="post" class="form" enctype="multipart/form-data">
+          <span class="form_msg">
+            <?php
+              if(!empty($err_msg['pic'])) echo $err_msg['pic'];
+            ?>
+          </span>
+          <label class="area-drop <?php if(!empty($err_msg['pic'])) echo 'err'; ?>">
             <input type="hidden" name="MAX_FILE_SIZE" value="3145728">
             <input type="file" name="pic" class="input-file">
             <img src="<?php echo getFormData('pic'); ?>" alt="" class="prev-img" style="<?php if(empty(getFormData('pic'))) echo 'display:none;' ?>">
-            ドラック＆ドロップ
+            <?php
+              if(!empty($err_msg['pic'])) echo 'ドラック＆ドロップ';
+            ?>
           </label>
           <div class="btn-container">
             <input type="submit" class="btn btn-mid" value="SAVE">
