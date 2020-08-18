@@ -159,7 +159,7 @@ function uploadImg($file, $key){
       // ハッシュ化しておかないとアップロードされたファイル名そのままで保存してしまうと同じファイル名がアップロードされる可能性があり、
       // DBにパスを保存した場合、どっちの画像のパスなのか判断つかなくなってしまう
       // image_type_to_extension関数はファイルの拡張子を取得するもの
-      $path = 'uploads/'.sha1_file($file['tmp_name']).image_type_to_extension($type);
+      $path = 'img/profile/'.sha1_file($file['tmp_name']).image_type_to_extension($type);
       if (!move_uploaded_file($file['tmp_name'], $path)) { //ファイルを移動する
           throw new RuntimeException('ファイル保存時にエラーが発生しました');
       }
