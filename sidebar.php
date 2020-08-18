@@ -1,7 +1,17 @@
 <section id="sidebar">
   <div class="prof-img">
-    <img src="./img/profile/noimage.jpg">
-  </div>
+    <?php
+    if(!empty(getFormData('pic'))){
+    ?>
+      <img src="<?php echo getFormData('pic'); ?>" alt="" class="prev-img" style="<?php if(empty(getFormData('pic'))) echo 'display:none;' ?>">
+    <?php
+    }else{
+    ?>
+      <img src="./img/profile/noimage.jpg">
+    <?php
+    }
+    ?>
+    </div>
   <h3><?php echo $userName;?></h3>
   <nav id="sidebar-nav">
     <ul>
