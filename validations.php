@@ -70,4 +70,42 @@ function validEmailDup($email){
     $err_msg['common'] = MSG07;
   }
 }
+
+//半角数字チェック
+function validNumber($str, $key){
+  if(!preg_match("/^[0-9]+$/", $str)){
+    global $err_msg;
+    $err_msg[$key] = MSG17;
+  }
+}
+//固定長チェック
+function validLength($str, $key, $len = 8){
+  if( mb_strlen($str) !== $len ){
+    global $err_msg;
+    $err_msg[$key] = $len . MSG14;
+  }
+}
+//パスワードチェック
+function validPass($str, $key){
+  //半角英数字チェック
+  validHalf($str, $key);
+  //最大文字数チェック
+  validMaxLen($str, $key);
+  //最小文字数チェック
+  validMinLen($str, $key);
+}
+//selectboxチェック
+function validSelect($str, $key){
+  if(!preg_match("/^[0-9]+$/", $str)){
+    global $err_msg;
+    $err_msg[$key] = MSG15;
+  }
+}
+//エラーメッセージ表示
+function getErrMsg($key){
+  global $err_msg;
+  if(!empty($err_msg[$key])){
+    return $err_msg[$key];
+  }
+}
 ?>
