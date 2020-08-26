@@ -230,3 +230,39 @@ input[type="checkbox"]{
   left:0;
   z-index: 3;
 }
+.form .post-img .imgDrop-container{
+  float: left;
+  width: 45%;
+  margin: 0 2.5%;
+}
+
+.form .post-img .area-drop{
+  margin: 15px auto;
+  background: white;
+  height: 200px;
+  width: 200px;
+  border-radius: 0;
+  text-align: center;
+  line-height: 200px;
+  position: relative;
+  box-sizing: border-box;
+}
+.form .post-img .input-file{
+  opacity: 0;
+  width:200px;
+  height:200px;
+  border-radius: 0;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index: 2;
+}
+.form .post-img .prev-img{
+  height: 200px;
+  width: 200px;
+  border-radius: 0;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index: 3;
+}
