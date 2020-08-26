@@ -1,7 +1,7 @@
 <?php
 
 //共通変数・関数ファイルを読込み
-require('function.php');
+require('./function.php');
 require('./errorMesages.php');
 require('./validations.php');
 
