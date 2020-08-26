@@ -13,11 +13,111 @@ debugLogStart();
 //Login authentication
 require('auth.php');
 
+// 画面表示用データ取得
+//================================
+//GETデータを格納
+$post_id = (!empty($_GET['post_id'])) ? $_GET['post_id']: '';
+//DBからpostデータを取得
+$dbPostData = (!empty($post_id)) ? getPost($_SESSION['user_id'], $post_id) : '';
+//新規登録か編集か？
+$edit_flg = (empty($dbPostData))? false: true;
+//カテゴリデータの取得
+$dbCategoryData = getCategory();
+debug('POST_ID'.$post_id);
+debug('POSTデータ: '.print_r($dbPostData, true));
+debug('カテゴリデータ: '.print_r($dbCategoryData, true));
 //GET USER DATA FROM DATABASE
 $dbFromData = getUser($_SESSION['user_id']);
 debug('取得したユーザー情報: '.print_r($dbFromData, true));
 
 
+//パラメータ改ざんCheck
+//================================
+// GETパラメータはあるが、改ざんされている（URLをいじくった）場合、正しい商品データが取れないのでマイページへ遷移させる
+if(!empty($post_id) && empty($dbPostData)){
+  debug('GETパラメータのPOST_IDが違います。マイページへ遷移します。');
+  header("Location:mypage.php"); //マイページへ
+}
+
+//post sending
+if(!empty($_POST)){
+  debug('POST送信があります。');
+  debug('POST情報：'.print_r($_POST,true));
+  debug('FILE情報：'.print_r($_FILES,true));
+
+  //変数にユーザー情報を代入
+  $title = $_POST['title'];
+  $place = $_POST['place'];
+  $category = $_POST['category_id'];
+  $comment = $_POST['comment'];
+  //画像をアップロードし、パスを格納
+  $pic1 = ( !empty($_FILES['pic1']['name']) ) ? uploadImg($_FILES['pic1'],'pic1') : '';
+  // 画像をPOSTしてない（登録していない）が既にDBに登録されている場合、DBのパスを入れる（POSTには反映されないので）
+  $pic1 = ( empty($pic1) && !empty($dbFormData['pic1']) ) ? $dbFormData['pic1'] : $pic1;
+  $pic2 = ( !empty($_FILES['pic2']['name']) ) ? uploadImg($_FILES['pic2'],'pic2') : '';
+  $pic2 = ( empty($pic2) && !empty($dbFormData['pic2']) ) ? $dbFormData['pic2'] : $pic2;
+  $pic3 = ( !empty($_FILES['pic3']['name']) ) ? uploadImg($_FILES['pic3'],'pic3') : '';
+  $pic3 = ( empty($pic3) && !empty($dbFormData['pic3']) ) ? $dbFormData['pic3'] : $pic3;
+  $pic4 = ( !empty($_FILES['pic4']['name']) ) ? uploadImg($_FILES['pic4'],'pic4') : '';
+  $pic4 = ( empty($pic4) && !empty($dbFormData['pic4']) ) ? $dbFormData['pic4'] : $pic4;
+  $pic5 = ( !empty($_FILES['pic5']['name']) ) ? uploadImg($_FILES['pic5'],'pic5') : '';
+  $pic5 = ( empty($pic5) && !empty($dbFormData['pic5']) ) ? $dbFormData['pic5'] : $pic5;
+  $pic6 = ( !empty($_FILES['pic6']['name']) ) ? uploadImg($_FILES['pic6'],'pic6') : '';
+  $pic6 = ( empty($pic6) && !empty($dbFormData['pic6']) ) ? $dbFormData['pic6'] : $pic6;
+
+  // 更新の場合はDBの情報と入力情報が異なる場合にバリデーションを行う
+  if(empty($dbPostData)){
+    validRequired($title, 'title');
+    validMaxLen($title, 'title');
+    validSelect($category, 'category_id');
+    validMaxLen($comment, 'comment', 500);
+  }else{
+    if($dbPostData['title'] !== $title){
+      validRequired($title, 'title');
+      validMaxLen($title, 'title');
+    }
+    if($dbPostData['category_id'] !== $category_id){
+      validSelect($category, 'category_id');
+    }
+    if($dbPostData['comment'] !== $comment){
+      validMaxLen($comment, 'comment', 500);
+    }
+  }
+
+  if(empty($err_msg)){
+    debug('Validation OK!');
+    try{
+      //Database Connection
+      $dbh = dbConnect();
+      //SQL
+      if($edit_flg){
+        debug('DB更新です。');
+        $sql = 'UPDATE post SET title = :title, place = :place, category_id = :category, comment = :comment, pic1 = :pic1, pic2 = :pic2, pic3 = :pic3, pic4 = :pic4, pic5 = :pic5, pic6 = :pic6 WHERE user_id = :user_id AND post_id = :post_id';
+        $data = array(':title' => $title, ':place' =>$place, ':category' => $category, ':comment' => $comment, ':pic1' => $pic1, ':pic2' => $pic2, ':pic3' => $pic3, ':pic4' => $pic4, ':pic5' => $pic5, ':pic6' => $pic6, ':user_id' => $_SESSION['user_id'], ':post_id' => $post_id);
+      }else{
+        debug('DB新規登録です。');
+        $sql = 'insert into (post title = :title, place = :place, category_id = :category, comment = :comment, pic1 = :pic1, pic2 = :pic2, pic3 = :pic3, pic4 = :pic4, pic5 = :pic5, pic6 = :pic6 WHERE user_id = :user_id AND post_id)';
+        $data = array(':title' => $title, ':place' =>$place, ':category' => $category, ':comment' => $comment, ':pic1' => $pic1, ':pic2' => $pic2, ':pic3' => $pic3, ':pic4' => $pic4, ':pic5' => $pic5, ':pic6' => $pic6, ':user_id' => $_SESSION['user_id'], ':post_id' => $post_id);
+      }
+      debug('SPQ: '.$sql);
+      debug('流し込みデータ: '.print_r($data, true));
+      //Query
+      $stmt = queryPost($dbh, $sql, $data);
+
+      if($stmt){
+        $_SESSION['msg_success'] = SUC04;
+        debug('マイページへ遷移します。');
+        header("Location:mypage.php"); //マイページへ
+      }
+
+    }catch(Exception $e){
+      error_log('エラー発生: '.$e->getMessage());
+      $err_msg['common'] = MSG07;
+    }
+  }
+}
+
+debug('画面表示処理終了 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
 ?>
 <?php
 $siteTitle = 'POST';
@@ -79,7 +179,7 @@ require('./head.php');
             </span>
             <textarea name="post_comment"><?php echo getFormData('post_comment'); ?></textarea>
           </label>
-          <div style="overflow:hidden;">
+          <div class="post-img" style="overflow:hidden;">
             <div class="imgDrop-container">
               <div class="area-msg">
                 <?php
