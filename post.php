@@ -18,23 +18,23 @@ require('auth.php');
 //GETデータを格納
 $post_id = (!empty($_GET['post_id'])) ? $_GET['post_id']: '';
 //DBからpostデータを取得
-$dbPostData = (!empty($post_id)) ? getPost($_SESSION['user_id'], $post_id) : '';
+$dbFromData = (!empty($post_id)) ? getPost($_SESSION['user_id'], $post_id) : '';
 //新規登録か編集か？
-$edit_flg = (empty($dbPostData))? false: true;
+$edit_flg = (empty($dbFromData))? false: true;
 //カテゴリデータの取得
 $dbCategoryData = getCategory();
 debug('POST_ID'.$post_id);
-debug('POSTデータ: '.print_r($dbPostData, true));
+debug('POSTデータ: '.print_r($dbFromData, true));
 debug('カテゴリデータ: '.print_r($dbCategoryData, true));
 //GET USER DATA FROM DATABASE
-$dbFromData = getUser($_SESSION['user_id']);
-debug('取得したユーザー情報: '.print_r($dbFromData, true));
+$dbUserData = getUser($_SESSION['user_id']);
+debug('取得したユーザー情報: '.print_r($dbUserData, true));
 
 
 //パラメータ改ざんCheck
 //================================
 // GETパラメータはあるが、改ざんされている（URLをいじくった）場合、正しい商品データが取れないのでマイページへ遷移させる
-if(!empty($post_id) && empty($dbPostData)){
+if(!empty($post_id) && empty($dbFromData)){
   debug('GETパラメータのPOST_IDが違います。マイページへ遷移します。');
   header("Location:mypage.php"); //マイページへ
 }
@@ -53,33 +53,33 @@ if(!empty($_POST)){
   //画像をアップロードし、パスを格納
   $pic1 = ( !empty($_FILES['pic1']['name']) ) ? uploadImg($_FILES['pic1'],'pic1') : '';
   // 画像をPOSTしてない（登録していない）が既にDBに登録されている場合、DBのパスを入れる（POSTには反映されないので）
-  $pic1 = ( empty($pic1) && !empty($dbFormData['pic1']) ) ? $dbFormData['pic1'] : $pic1;
+  $pic1 = ( empty($pic1) && !empty($dbFromData['pic1']) ) ? $dbFromData['pic1'] : $pic1;
   $pic2 = ( !empty($_FILES['pic2']['name']) ) ? uploadImg($_FILES['pic2'],'pic2') : '';
-  $pic2 = ( empty($pic2) && !empty($dbFormData['pic2']) ) ? $dbFormData['pic2'] : $pic2;
+  $pic2 = ( empty($pic2) && !empty($dbFromData['pic2']) ) ? $dbFromData['pic2'] : $pic2;
   $pic3 = ( !empty($_FILES['pic3']['name']) ) ? uploadImg($_FILES['pic3'],'pic3') : '';
-  $pic3 = ( empty($pic3) && !empty($dbFormData['pic3']) ) ? $dbFormData['pic3'] : $pic3;
+  $pic3 = ( empty($pic3) && !empty($dbFromData['pic3']) ) ? $dbFromData['pic3'] : $pic3;
   $pic4 = ( !empty($_FILES['pic4']['name']) ) ? uploadImg($_FILES['pic4'],'pic4') : '';
-  $pic4 = ( empty($pic4) && !empty($dbFormData['pic4']) ) ? $dbFormData['pic4'] : $pic4;
+  $pic4 = ( empty($pic4) && !empty($dbFromData['pic4']) ) ? $dbFromData['pic4'] : $pic4;
   $pic5 = ( !empty($_FILES['pic5']['name']) ) ? uploadImg($_FILES['pic5'],'pic5') : '';
-  $pic5 = ( empty($pic5) && !empty($dbFormData['pic5']) ) ? $dbFormData['pic5'] : $pic5;
+  $pic5 = ( empty($pic5) && !empty($dbFromData['pic5']) ) ? $dbFromData['pic5'] : $pic5;
   $pic6 = ( !empty($_FILES['pic6']['name']) ) ? uploadImg($_FILES['pic6'],'pic6') : '';
-  $pic6 = ( empty($pic6) && !empty($dbFormData['pic6']) ) ? $dbFormData['pic6'] : $pic6;
+  $pic6 = ( empty($pic6) && !empty($dbFromData['pic6']) ) ? $dbFromData['pic6'] : $pic6;
 
   // 更新の場合はDBの情報と入力情報が異なる場合にバリデーションを行う
-  if(empty($dbPostData)){
+  if(empty($dbFromData)){
     validRequired($title, 'title');
     validMaxLen($title, 'title');
     validSelect($category, 'category_id');
     validMaxLen($comment, 'comment', 500);
   }else{
-    if($dbPostData['title'] !== $title){
+    if($dbFromData['title'] !== $title){
       validRequired($title, 'title');
       validMaxLen($title, 'title');
     }
-    if($dbPostData['category_id'] !== $category_id){
+    if($dbFromData['category_id'] !== $category_id){
       validSelect($category, 'category_id');
     }
-    if($dbPostData['comment'] !== $comment){
+    if($dbFromData['comment'] !== $comment){
       validMaxLen($comment, 'comment', 500);
     }
   }
@@ -135,7 +135,7 @@ require('./head.php');
 
     <!-- サイドバー -->
     <?php
-    $userName = $dbFromData['user_name'];
+    $userName = $dbUserData['user_name'];
     require('./sideBar.php');
     ?>
 
@@ -170,14 +170,14 @@ require('./head.php');
             </span>
             <input type="text" name="category" value="<?php echo getFormData('category'); ?>">
           </label>
-          <label class="<?php if(!empty($err_msg['post_comment'])) echo 'err'; ?>">
+          <label class="<?php if(!empty($err_msg['comment'])) echo 'err'; ?>">
             COMMENT
             <span class="form_msg">
               <?php
-                if(!empty($err_msg['post_comment'])) echo $err_msg['post_comment'];
+                if(!empty($err_msg['comment'])) echo $err_msg['comment'];
               ?>
             </span>
-            <textarea name="post_comment"><?php echo getFormData('post_comment'); ?></textarea>
+            <textarea name="comment"><?php echo getFormData('comment'); ?></textarea>
           </label>
           <div class="post-img" style="overflow:hidden;">
             <div class="imgDrop-container">
