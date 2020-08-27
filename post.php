@@ -143,6 +143,7 @@ require('./head.php');
     <section id="main" class="with-sidebar">
       <div class="form-container">
         <form action="" method="post" class="form">
+          <!-- TITLE -->
           <label class="<?php if(!empty($err_msg['title'])) echo 'err'; ?>">
             TITLE
             <span class="form_msg">
@@ -152,6 +153,7 @@ require('./head.php');
             </span>
             <input type="text" name="title" value="<?php echo getFormData('title'); ?>">
           </label>
+          <!-- PLACE -->
           <label class="<?php if(!empty($err_msg['place'])) echo 'err'; ?>">
             PLACE
             <span class="form_msg">
@@ -161,6 +163,7 @@ require('./head.php');
             </span>
             <input type="text" name="place" value="<?php echo getFormData('place'); ?>">
           </label>
+          <!-- CATEGORY -->
           <label class="<?php if(!empty($err_msg['category'])) echo 'err'; ?>">
             CATEGORY
             <span class="form_msg">
@@ -168,8 +171,22 @@ require('./head.php');
                 if(!empty($err_msg['category'])) echo $err_msg['category'];
               ?>
             </span>
-            <input type="text" name="category" value="<?php echo getFormData('category'); ?>">
+            <select name="category" id="">
+              <option value="0" <?php if(getFormData('category_id') == 0) echo 'selected'; ?>>
+                選択してください
+              </option>
+              <?php
+                foreach($dbCategoryData as $key => $val){
+              ?>
+                  <option value="<?php echo $val['id'] ?>" <?php if(getFormData('category_id') == $val['id']) echo 'selected'; ?>>
+                    <?php echo $val['name']; ?>
+                  </option>
+              <?php
+                }
+              ?>
+            </select>
           </label>
+          <!-- COMMENT -->
           <label class="<?php if(!empty($err_msg['comment'])) echo 'err'; ?>">
             COMMENT
             <span class="form_msg">
@@ -179,6 +196,7 @@ require('./head.php');
             </span>
             <textarea name="comment"><?php echo getFormData('comment'); ?></textarea>
           </label>
+          <!-- POST -->
           <div class="post-img" style="overflow:hidden;">
             <div class="imgDrop-container">
               <div class="area-msg">
